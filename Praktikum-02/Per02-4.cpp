@@ -30,12 +30,6 @@ void printList() {
   }
   cout << endl;
 }
-void addHead(int data){
-    Node* newNode = new Node();
-    newNode->data = data;
-    newNode->next = head;
-    head = newNode;
-}
 int main()  {
   addNode(10);
   addNode(15);

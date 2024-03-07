@@ -87,11 +87,11 @@ do {
             printList();
             break;
         case 5:
-            cout << "Terima kasih telah menggunakan program ini.\n"; 
+            cout << "Program Berakhir\n"; 
             break;
         default: 
             if (pilihan > 5) {
-                cout << "Pilihan tidak valid! Masukkan angka 1-5.\n";
+                cout << "Pilihan tidak valid! Masukkan angka 1-5\n";
             }
             else {
                 cout << "Pilihan tidak valid!\n";
