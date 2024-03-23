@@ -1,5 +1,4 @@
 #include <iostream>
-
 using namespace std;
 
 struct Node {
@@ -71,7 +70,14 @@ void addNodeAfter(Node* prevNode, int data){
       prevNode->next = newNode;
       newNode->prev = prevNode;
       newNode->next = NULL;
-      tail = newNode;
+      if (head != NULL){
+        tail = newNode;
+      } else {
+        head = tail;
+        tail = newNode;
+      }
+    } else if (prevNode == head && tail == NULL){
+        addTail(data);
     } else {
       Node *Temp = prevNode->next;
       prevNode->next = newNode;
@@ -87,7 +93,14 @@ void addNodeBefore(Node* NextNode, int data){
     newNode->next = head;
     newNode->prev = NULL;
     head->prev = newNode;
+    if (tail != NULL){
     head = newNode;
+    } else {
+      tail = head;
+      head = newNode;
+    }
+  } else if (NextNode == tail && head == NULL){
+    addHead(data);
   } else {
     Node* Temp = NextNode->prev;
     Temp->next = newNode;
@@ -110,22 +123,42 @@ void LiFo(){
     temp = temp->prev;
   } cout << endl;
 }
+void deleteHead() {
+  if (head != NULL) {
+    if(head->next != NULL){Node *temp = head; 
+    head = head->next;
+    head->prev = NULL;
+    delete temp;
+    } else {
+      head = NULL;
+    }
+  } else {
+    cout << "Head tidak ditemukan" << endl;
+  }
+}
+void deleteTail() {
+  if (tail != NULL) {
+    if(tail->prev != NULL){Node *temp = tail; 
+    tail = tail->prev;
+    tail->next = NULL;
+    delete temp;
+    } else {
+      tail = NULL;
+    }
+  } else {
+    cout << "Tail tidak ditemukan" << endl;
+  }
+}
 void deleteNode(int data) {
   Node *current = head;
 
   while (current != NULL) {
     if (current->data == data) {
       if (current == head) {
-        head = current->next;
-        if (head != NULL)
-          head->prev = NULL;
-        delete current;
+        deleteHead();
         return;
       } else if (current == tail) {
-        tail = current->prev;
-        if (tail != NULL)
-          tail->next = NULL;
-        delete current;
+        deleteTail();
         return;
       } else {
         current->prev->next = current->next;
@@ -136,49 +169,14 @@ void deleteNode(int data) {
     }
     current = current->next;
   }
-  cout << "Node not found" << endl;
+  cout << "Data tidak ditemukan" << endl;
 }
-void deleteHead() {
-  if (head != NULL) {
-    Node *temp = head;
-    head = head->next;
-    head->prev = NULL;
-    delete temp;
-  } else {
-    cout << "Head not found" << endl;
-  }
-}
-void deleteTail() {
-  if (tail != NULL) {
-    Node *temp = tail;
-    tail = tail->prev;
-    tail->next = NULL;
-    delete temp;
-  } else {
-    cout << "Tail not found" << endl;
-  }
-}
-Node* searchNode(int data) {
+Node* cariNode(int data) {
   Node* current = head;
-  while (current != NULL && current->data != data) {
+  while (current->data != data && current != NULL ) {
     current = current->next;
   }
   return current;
-}
-void cariData(int data) {
-  Node* cari = head;
-  bool ditemukan = false;
-  while (cari != nullptr) {
-    if (cari->data == data) {
-      cout << "Data ditemukan: " << "\n:" << cari->data << endl;
-      ditemukan = true;
-      break;
-    }
-    cari = cari->next;
-  }
-  if (!ditemukan) {
-    cout << "Data tidak ditemukan." << endl;
-  }
 }
 int main() {
   int x, pilihan;
@@ -212,7 +210,12 @@ do {
         case 3:
             cout << "Masukkan Data yang ingin dicari: ";
             cin >> x;
-            cariData(x);
+            cariNode(x);
+            if(cariNode(x) != NULL){
+              cout << "Data ditemukan: " << cariNode(x)->data << endl;
+            } else {
+              cout << "Data tidak ditemukan." << endl;  
+            }
             break;
         case 4:cout<<"Data:";
             FiFo();
@@ -232,8 +235,8 @@ do {
             break;
         case 9:cout<<"Masukan Node yang berada di list: ";
             cin >> x;
-          if (searchNode(x) != NULL){
-            Node *target = searchNode(x);
+          if (cariNode(x) != NULL){
+            Node *target = cariNode(x);
             cout << "Masukan Node yang akan di tambahkan setelah node "<< x <<": ";
             cin >> x;
             addNodeAfter(target, x);
@@ -244,8 +247,8 @@ do {
           }
           case 10:cout<<"Masukan Node yang berada di list: ";
             cin >> x;
-          if (searchNode(x) != NULL){
-              Node *target = searchNode(x);
+          if (cariNode(x) != NULL){
+              Node *target = cariNode(x);
             cout << "Masukan Node yang akan di tambahkan Sebelum node "<< x <<": ";
             cin >> x;
             addNodeBefore(target, x);
